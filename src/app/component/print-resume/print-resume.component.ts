@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { BasicDetailInterface, EducationInterface, ExperiencesInterface, PersonalInfoInterface, ProjectsInterface, SkillsAndCertificatesInterface, StrengthsAndHobbiesInterface } from 'src/app/interface/data-template';
+import { AllModelInterface, BasicDetailInterface, EducationInterface, ExperiencesInterface, PersonalInfoInterface, ProjectsInterface, SkillsAndCertificatesInterface, StrengthsAndHobbiesInterface } from 'src/app/interface/data-template';
 import { BasicdetailService } from 'src/app/services/basicdetail.service';
+import { StandardDownloadService } from 'src/app/services/standard-download.service';
 
 @Component({
   selector: 'app-print-resume',
@@ -21,10 +22,12 @@ export class PrintResumeComponent implements OnInit {
   skillAndCertificate:SkillsAndCertificatesInterface = {skills:[], certificates:[]}
   strengthAndHobbies: StrengthsAndHobbiesInterface = {hobbies:[], strengths:[]}
   show:boolean = false;
-
+  all!: AllModelInterface;
+  
   constructor(
     private basicDetailService: BasicdetailService,
-    private snack: MatSnackBar) {
+    private snack: MatSnackBar,
+    private standardDownload: StandardDownloadService) {
     let temp = this.basicDetailService.getBasicDetail();
     if (temp != null) {
       this.basicDetail = temp
@@ -74,10 +77,33 @@ export class PrintResumeComponent implements OnInit {
       if(tempSH!=null){
         this.strengthAndHobbies = tempSH
       }
+      this.all = {
+        basicDetails: this.basicDetail,
+        personalInfo: this.personalInfo,
+        educationSchools: this.education.school,
+        educationColleges: this.education.college,
+        skills: this.skillAndCertificate.skills,
+        certificates: this.skillAndCertificate.certificates,
+        experiences: this.experiences,
+        strengthsAndHobbies: this.strengthAndHobbies,
+        projects: this.projects,
+        declaration: this.declaration
+      }
     }
   }
 
   ngOnInit(): void {
+  }
+
+  pResumeDownload(n:number):void {
+    this.standardDownload.downlaod(this.all,n).subscribe(
+      (response:any)=>{
+        console.log(response)
+      },
+      error=>{
+        console.log(error)
+      }
+    )
   }
 
 }
