@@ -98,7 +98,17 @@ export class PrintResumeComponent implements OnInit {
   pResumeDownload(n:number):void {
     this.standardDownload.downlaod(this.all,n).subscribe(
       (response:any)=>{
-        console.log(response)
+        if(response.status==200) {
+          var blob = new Blob([response.content], { type: "application/pdf" });				    
+          var url = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.style.display = 'none';
+          a.href = url;
+          a.download = "download.pdf";
+          document.body.appendChild(a);
+          a.click();
+          window.URL.revokeObjectURL(url);
+		    }
       },
       error=>{
         console.log(error)
