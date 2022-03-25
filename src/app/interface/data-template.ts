@@ -70,6 +70,7 @@ export interface ProjectsInterface{
   projects: ProjectInterface[];
 }
 export interface AllModelInterface {
+  profilePic:string,
   basicDetails: BasicDetailInterface,
   personalInfo: PersonalInfoInterface,
   educationSchools: EducationSchoolInterface[],
