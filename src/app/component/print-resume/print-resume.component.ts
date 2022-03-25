@@ -78,6 +78,7 @@ export class PrintResumeComponent implements OnInit {
         this.strengthAndHobbies = tempSH
       }
       this.all = {
+        profilePic: this.imagePath,
         basicDetails: this.basicDetail,
         personalInfo: this.personalInfo,
         educationSchools: this.education.school,
@@ -99,7 +100,7 @@ export class PrintResumeComponent implements OnInit {
     this.standardDownload.downlaod(this.all,n).subscribe(
       (response:any)=>{
         if(response.status==200) {
-          var blob = new Blob([response.content], { type: "application/pdf" });				    
+          var blob = new Blob([this._base64ToArrayBuffer(response.content)], { type: "application/pdf" });				    
           var url = window.URL.createObjectURL(blob);
           const a = document.createElement('a');
           a.style.display = 'none';
@@ -108,12 +109,24 @@ export class PrintResumeComponent implements OnInit {
           document.body.appendChild(a);
           a.click();
           window.URL.revokeObjectURL(url);
-		    }
+        } else {
+          alert("Something went wrong!!");
+        }
       },
       error=>{
-        console.log(error)
+        alert("Something went wrong, please try again later!!");
       }
     )
+  }
+  
+  _base64ToArrayBuffer(base64:any) {
+    var binary_string = window.atob(base64);
+    var len = binary_string.length;
+    var bytes = new Uint8Array(len);
+    for (var i = 0; i < len; i++) {
+        bytes[i] = binary_string.charCodeAt(i);
+    }
+    return bytes.buffer;
   }
 
 }
