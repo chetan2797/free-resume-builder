@@ -9,7 +9,7 @@ export class StandardDownloadService {
 
   constructor(private http:HttpClient) {}
 
-  baseurl:string = "https://resume-bluider-api.herokuapp.com/resume"
+  baseurl:string = "https://resume-builer-api.herokuapp.com/resume"
 
   downlaod(all:AllModelInterface, n:number) {
     return this.http.post(`${this.baseurl}-${n}`,all);
